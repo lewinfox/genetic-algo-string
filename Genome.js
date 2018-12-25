@@ -1,16 +1,17 @@
 class Genome {
 
-  constructor(genome) {
+  constructor(genome, mutation_probability = 0.01) {
     this._genome = genome;
+    this._mutation_probability = mutation_probability;
     this._string_distance = null;
     this._fitness = null;
     this.mutate();
   }
 
-  mutate(mutation_probability = 0.01) {
+  mutate() {
     let new_genome = [];
     for (let letter of this._genome) {
-      if (Math.random() < mutation_probability) {
+      if (Math.random() < this._mutation_probability) {
         // Pick a random character
         const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPGRSTUVWXYZ 0123456789';
         const index = Math.floor(Math.random() * chars.length);
