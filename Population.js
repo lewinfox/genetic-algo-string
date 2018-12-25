@@ -1,9 +1,11 @@
 class Population {
 
-  constructor(genomes) {
+  constructor(n_genomes, target) {
     this._population = [];
-    for (let x of genomes) {
-      this._population.push(new Genome(x));
+    this._target = target;
+    this._max_fitness = 1;
+    for (let i = 0; i < n_genomes; i++) {
+      this._population.push(new Genome(target.length));
     }
   }
 
@@ -18,18 +20,17 @@ class Population {
     return sorted_pop[0];
   }
 
-  calculate_fitness(target) {
-    let max_fitness = 0;
+  calculate_fitness() {
     // Calculate all fitnesses, then normalise
     for (let genome of this._population) {
       const str_genome = genome.genome_as_string;
-      const string_distance = levenshtein(target, str_genome);
+      const string_distance = levenshtein(this._target, str_genome);
       genome.string_distance = string_distance;
-      genome.fitness = target.length - string_distance;
-      max_fitness = Math.max(max_fitness, genome.fitness);
+      genome.fitness = this._target.length - string_distance;
+      this._max_fitness = Math.max(this._max_fitness, genome.fitness);
     }
     for (let genome of this._population) {
-      genome.fitness = genome.fitness / max_fitness;
+      genome.fitness = genome.fitness / this._max_fitness;
     }
   }
 
@@ -52,6 +53,7 @@ class Population {
     }
 
     for (let pair of pairs) {
+      let child = new Genome(target.length);
       let child_genome = [];
       const parent_1 = pair[0];
       const parent_2 = pair[1];
@@ -64,7 +66,8 @@ class Population {
           child_genome.push(genome_2[i]);
         }
       }
-      children.push(new Genome(child_genome));
+      child.genome = child_genome;
+      children.push(child);
     }
     this._population = children;
   }
