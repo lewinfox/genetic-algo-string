@@ -1,4 +1,4 @@
-const target = 'to be or not to be';
+const target = 'hello';
 
 const random_genome = (length) => {
   let result = [];
@@ -9,7 +9,7 @@ const random_genome = (length) => {
   }
   return result;
 }
-
+// Setup
 let genomes = [];
 for (let i = 0; i < 100; i++) {
   const new_genome = random_genome(target.length);
@@ -17,7 +17,9 @@ for (let i = 0; i < 100; i++) {
 }
 let p = new Population(genomes);
 let counter = 0;
-while (p.best_candidate.genome_as_string !== target) {
+
+// Main loop
+while (p.best_candidate.genome_as_string !== target && counter < 10000) {
   console.log(`Iteration: ${counter} \t ${p.best_candidate.genome_as_string}`);
   p.calculate_fitness(target);
   p.breed();
