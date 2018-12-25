@@ -1,27 +1,19 @@
-const target = 'hello';
+const target = 'good morning lord nelson';
+const population_size = 200;
 
-const random_genome = (length) => {
-  let result = [];
-  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPGRSTUVWXYZ 0123456789';
-  for (i = 0; i < length; i++) {
-    const index = Math.floor(Math.random() * chars.length);
-    result.push(chars[index]);
-  }
-  return result;
-}
-// Setup
-let genomes = [];
-for (let i = 0; i < 100; i++) {
-  const new_genome = random_genome(target.length);
-  genomes.push(new_genome);
-}
-let p = new Population(genomes);
+let p = new Population(population_size, target);
+// const original_p = JSON.parse(JSON.stringify(p));
+// console.log("Original object:");
+// console.log(original_p);
+
 let counter = 0;
 
 // Main loop
 while (p.best_candidate.genome_as_string !== target && counter < 10000) {
   console.log(`Iteration: ${counter} \t ${p.best_candidate.genome_as_string}`);
   p.calculate_fitness(target);
+  const original_p = JSON.parse(JSON.stringify(p));
+  // console.log(original_p);
   p.breed();
   counter ++;
 }
