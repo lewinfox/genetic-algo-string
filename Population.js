@@ -1,10 +1,11 @@
 class Population {
 
-  constructor(n_genomes, target, mutation_probability = 0.01) {
+  constructor(n_genomes, target, mutation_probability = 0.01, gene_size = 1) {
     this._population = [];
     this._target = target;
     this._mutation_probability = mutation_probability;
     this._max_fitness = 1;
+    this._gene_size = gene_size;
     for (let i = 0; i < n_genomes; i++) {
       this._population.push(new Genome(target.length, mutation_probability));
     }
@@ -35,10 +36,11 @@ class Population {
     }
   }
 
-  breed(n_children = this._population.length) {
+  breed(n_children = this._population.length, gene_size = this._gene_size) {
 
     let pairs = [];
     let children = [];
+    let gene_regex = new RegExp(`.{1,${gene_size}}`, 'g');
 
     while (pairs.length < n_children) {
       let parents = [];
@@ -58,8 +60,8 @@ class Population {
       let child_genome = [];
       const parent_1 = pair[0];
       const parent_2 = pair[1];
-      const genome_1 = parent_1.genome;
-      const genome_2 = parent_2.genome;
+      const genome_1 = parent_1.genome_as_string.match(gene_regex);
+      const genome_2 = parent_2.genome_as_string.match(gene_regex);
       for (let i = 0; i < genome_1.length; i++) {
         if (Math.random() < 0.5) {
           child_genome.push(genome_1[i]);
