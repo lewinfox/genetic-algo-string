@@ -6,7 +6,6 @@ class Genome {
     this._string_distance = null;
     this._fitness = null;
     this.initialise_random_genome(genome_length);
-    this.mutate();
   }
 
   initialise_random_genome(genome_length) {

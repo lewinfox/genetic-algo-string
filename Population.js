@@ -1,11 +1,12 @@
 class Population {
 
-  constructor(n_genomes, target) {
+  constructor(n_genomes, target, mutation_probability = 0.01) {
     this._population = [];
     this._target = target;
+    this._mutation_probability = mutation_probability;
     this._max_fitness = 1;
     for (let i = 0; i < n_genomes; i++) {
-      this._population.push(new Genome(target.length));
+      this._population.push(new Genome(target.length, mutation_probability));
     }
   }
 
@@ -53,7 +54,7 @@ class Population {
     }
 
     for (let pair of pairs) {
-      let child = new Genome(target.length);
+      let child = new Genome(target.length, this._mutation_probability);
       let child_genome = [];
       const parent_1 = pair[0];
       const parent_2 = pair[1];
@@ -67,6 +68,7 @@ class Population {
         }
       }
       child.genome = child_genome;
+      child.mutate();
       children.push(child);
     }
     this._population = children;
