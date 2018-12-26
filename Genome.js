@@ -3,7 +3,6 @@ class Genome {
   constructor(genome_length, mutation_probability = 0.01) {
     this._genome = [];
     this._mutation_probability = mutation_probability;
-    this._string_distance = null;
     this._fitness = null;
     this.initialise_random_genome(genome_length);
   }

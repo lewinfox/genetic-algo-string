@@ -4,8 +4,8 @@ class Population {
     this._population = [];
     this._target = target;
     this._mutation_probability = mutation_probability;
-    this._max_fitness = 1;
     this._gene_size = gene_size;
+    this._max_fitness = 0;
     for (let i = 0; i < n_genomes; i++) {
       this._population.push(new Genome(target.length, mutation_probability));
     }
@@ -23,32 +23,32 @@ class Population {
   }
 
   calculate_fitness() {
-    // Calculate all fitnesses, then normalise
+    // Calculate all fitnesses
     for (let genome of this._population) {
       const str_genome = genome.genome_as_string;
       const string_distance = levenshtein(this._target, str_genome);
-      genome.string_distance = string_distance;
-      genome.fitness = this._target.length - string_distance;
-      this._max_fitness = Math.max(this._max_fitness, genome.fitness);
+      let fitness = Math.max(this._target.length - string_distance, 0);
+      this._max_fitness = Math.max(this._max_fitness, fitness);
+      genome.fitness = fitness;
     }
     for (let genome of this._population) {
       genome.fitness = genome.fitness / this._max_fitness;
     }
   }
 
-  breed(n_children = this._population.length, gene_size = this._gene_size) {
+  breed() {
 
     let pairs = [];
     let children = [];
-    let gene_regex = new RegExp(`.{1,${gene_size}}`, 'g');
+    let gene_regex = new RegExp(`.{1,${this._gene_size}}`, 'g');
 
-    while (pairs.length < n_children) {
+    while (pairs.length < this._population.length) {
       let parents = [];
       while (parents.length < 2) {
         const idx = Math.floor(Math.random() * this.population.length);
         const threshold = Math.random();
         const parent = this._population[idx];
-        if (threshold < parent.fitness || threshold < 0.01) {
+        if (threshold < parent.fitness || threshold < 0.001) {
           parents.push(parent);
         }
       }
@@ -69,7 +69,7 @@ class Population {
           child_genome.push(genome_2[i]);
         }
       }
-      child.genome = child_genome;
+      child.genome = child_genome.flat();
       child.mutate();
       children.push(child);
     }
